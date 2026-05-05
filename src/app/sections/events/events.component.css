@@ -1,0 +1,140 @@
+.events {
+  background: var(--color-noir);
+}
+
+.events__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.events__image-wrap {
+  position: relative;
+}
+
+.events__image-frame {
+  position: relative;
+}
+
+.events__image-frame::before {
+  content: '';
+  position: absolute;
+  inset: 12px -12px -12px 12px;
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  pointer-events: none;
+}
+
+.events__image {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+}
+
+.events__capacity {
+  position: absolute;
+  bottom: -20px;
+  right: -32px;
+  background: var(--color-charcoal);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.events__capacity-num {
+  font-family: var(--font-display);
+  font-size: 3.25rem;
+  font-weight: 300;
+  color: var(--color-gold);
+  line-height: 1;
+}
+
+.events__capacity-label {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-ivory-dim);
+}
+
+.events__capacity-sub {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: rgba(245, 240, 232, 0.35);
+}
+
+.events__text {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.events__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 400;
+  color: var(--color-ivory);
+  line-height: 1.15;
+}
+
+.events__subtitle {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(245, 240, 232, 0.7);
+}
+
+.events__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.events__list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--color-ivory-dim);
+}
+
+.events__list-bullet {
+  color: var(--color-gold);
+  font-size: 0.5rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .events__grid {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+
+  .events__capacity {
+    right: 0;
+    bottom: -16px;
+  }
+
+  .events__image {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 600px) {
+  .events__capacity {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+}

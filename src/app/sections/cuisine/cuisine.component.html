@@ -1,0 +1,27 @@
+<section class="cuisine section-py" id="cuisine">
+  <div class="section-container">
+
+    <div class="cuisine__header" scrollReveal [delay]="0">
+      <p class="overline">{{ 'cuisine.overline' | translate }}</p>
+      <div class="divider-gold divider-gold--center" style="margin: 16px auto 28px"></div>
+      <h2 class="cuisine__title">{{ 'cuisine.title' | translate }}</h2>
+      <p class="cuisine__subtitle">{{ 'cuisine.subtitle' | translate }}</p>
+    </div>
+
+    <div class="cuisine__grid">
+      @for (dish of dishes; track dish.key; let i = $index) {
+        <div class="dish-card" scrollReveal [delay]="(i % 3) * 120">
+          <div class="dish-card__img-wrap">
+            <img class="dish-card__img" [src]="dish.image" [alt]="'cuisine.dishes.' + dish.key + '_name' | translate" loading="lazy">
+          </div>
+          <div class="dish-card__body">
+            <h3 class="dish-card__name">{{ 'cuisine.dishes.' + dish.key + '_name' | translate }}</h3>
+            <div class="dish-card__divider"></div>
+            <p class="dish-card__desc">{{ 'cuisine.dishes.' + dish.key + '_desc' | translate }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+  </div>
+</section>

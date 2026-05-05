@@ -1,0 +1,126 @@
+.contacts {
+  background: var(--color-charcoal);
+  position: relative;
+}
+
+/* Gold gradient line at the section boundary */
+.contacts::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(201, 169, 110, 0.5) 20%,
+    rgba(201, 169, 110, 0.5) 80%,
+    transparent 100%
+  );
+}
+
+/* Diamond ornament centred on the line */
+.contacts::after {
+  content: '◆';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.5rem;
+  color: var(--color-gold);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.contacts__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.contacts__map {
+  height: 480px;
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 110, 0.15);
+}
+
+.contacts__map iframe {
+  filter: invert(90%) hue-rotate(180deg) saturate(0.85) brightness(0.92);
+}
+
+.contacts__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.contacts__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 400;
+  color: var(--color-ivory);
+  line-height: 1.15;
+  margin-bottom: 48px;
+}
+
+.contacts__details {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.contacts__detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.contacts__detail-icon {
+  color: var(--color-gold);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contacts__detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contacts__detail-label {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.contacts__detail-value {
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--color-ivory-dim);
+}
+
+.contacts__phone {
+  display: block;
+  transition: color 0.2s ease;
+}
+
+.contacts__phone:hover {
+  color: var(--color-gold);
+}
+
+@media (max-width: 1024px) {
+  .contacts__grid {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+
+  .contacts__map {
+    height: 320px;
+  }
+}

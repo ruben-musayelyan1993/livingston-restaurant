@@ -1,0 +1,134 @@
+@if (svc.isOpen()) {
+  <div class="rm-overlay" (click)="close()" role="dialog" aria-modal="true">
+    <div class="rm-panel" (click)="$event.stopPropagation()">
+
+      <!-- Left: decorative image panel -->
+      <div class="rm-deco">
+        <div class="rm-deco__overlay"></div>
+        <div class="rm-deco__content">
+          <span class="rm-deco__name">LIVINGSTON</span>
+          <div class="divider-gold divider-gold--center"></div>
+          <p class="rm-deco__tagline">{{ 'hero.tagline' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- Right: form panel -->
+      <div class="rm-body">
+
+        <button class="rm-close" (click)="close()" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <line x1="1" y1="1" x2="13" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="13" y1="1" x2="1" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        @if (status() === 'success') {
+
+          <div class="rm-success">
+            <div class="rm-success__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="15" stroke="var(--color-gold)" stroke-width="1"/>
+                <path d="M9 16l5 5 9-9" stroke="var(--color-gold)" stroke-width="1.5"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h2 class="rm-success__title">{{ 'reservation.success.title' | translate }}</h2>
+            <p class="rm-success__msg">{{ 'reservation.success.message' | translate }}</p>
+            <button class="btn-ghost" (click)="close()">
+              {{ 'reservation.success.close' | translate }}
+            </button>
+          </div>
+
+        } @else {
+
+          <div class="rm-header">
+            <p class="overline">{{ 'reservation.overline' | translate }}</p>
+            <div class="divider-gold" style="margin: 12px 0 20px"></div>
+            <h2 class="rm-title">{{ 'reservation.title' | translate }}</h2>
+          </div>
+
+          <form class="rm-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+            <input type="text" formControlName="_hp" class="hp-field"
+                   tabindex="-1" autocomplete="off" aria-hidden="true">
+
+            <div class="rm-row">
+              <div class="rm-field">
+                <label class="rm-label" for="m-name">{{ 'reservation.fields.name' | translate }}</label>
+                <input id="m-name" type="text" formControlName="name" class="input-underline"
+                       [placeholder]="'reservation.fields.name' | translate">
+                @if (fieldError('name', 'required')) {
+                  <span class="rm-error">{{ 'reservation.validation.name_required' | translate }}</span>
+                } @else if (fieldError('name', 'minlength')) {
+                  <span class="rm-error">{{ 'reservation.validation.name_min' | translate }}</span>
+                }
+              </div>
+              <div class="rm-field">
+                <label class="rm-label" for="m-phone">{{ 'reservation.fields.phone' | translate }}</label>
+                <input id="m-phone" type="tel" formControlName="phone" class="input-underline"
+                       placeholder="+374 XX XX XX XX">
+                @if (fieldError('phone', 'required')) {
+                  <span class="rm-error">{{ 'reservation.validation.phone_required' | translate }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="rm-row">
+              <div class="rm-field">
+                <label class="rm-label" for="m-date">{{ 'reservation.fields.date' | translate }}</label>
+                <input id="m-date" type="date" formControlName="date"
+                       class="input-underline" [min]="todayStr">
+                @if (fieldError('date', 'required')) {
+                  <span class="rm-error">{{ 'reservation.validation.date_required' | translate }}</span>
+                } @else if (fieldError('date', 'pastDate')) {
+                  <span class="rm-error">{{ 'reservation.validation.date_past' | translate }}</span>
+                }
+              </div>
+              <div class="rm-field">
+                <label class="rm-label" for="m-guests">{{ 'reservation.fields.guests' | translate }}</label>
+                <select id="m-guests" formControlName="guests" class="input-underline">
+                  @for (n of [1,2,3,4,5,6]; track n) {
+                    <option [value]="n">{{ 'reservation.fields.guests_' + n | translate }}</option>
+                  }
+                  <option value="7">{{ 'reservation.fields.guests_more' | translate }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="rm-field">
+              <label class="rm-label" for="m-email">{{ 'reservation.fields.email' | translate }}</label>
+              <input id="m-email" type="email" formControlName="email" class="input-underline"
+                     [placeholder]="'reservation.fields.email' | translate">
+              @if (fieldError('email', 'required')) {
+                <span class="rm-error">{{ 'reservation.validation.email_required' | translate }}</span>
+              } @else if (fieldError('email', 'email')) {
+                <span class="rm-error">{{ 'reservation.validation.email_invalid' | translate }}</span>
+              }
+            </div>
+
+            <div class="rm-field">
+              <label class="rm-label" for="m-comment">{{ 'reservation.fields.comment' | translate }}</label>
+              <textarea id="m-comment" formControlName="comment" class="input-underline rm-textarea"
+                        [placeholder]="'reservation.fields.comment' | translate" rows="2"></textarea>
+            </div>
+
+            @if (status() === 'error') {
+              <p class="rm-error-global">{{ 'reservation.error' | translate }}</p>
+            }
+
+            <button type="submit" class="btn-solid" [disabled]="status() === 'loading'">
+              @if (status() === 'loading') {
+                <span class="rm-spinner"></span>
+                {{ 'reservation.submitting' | translate }}
+              } @else {
+                {{ 'reservation.submit' | translate }}
+              }
+            </button>
+
+          </form>
+
+        }
+      </div>
+    </div>
+  </div>
+}

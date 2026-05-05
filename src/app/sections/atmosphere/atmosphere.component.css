@@ -1,0 +1,187 @@
+.atmosphere {
+  position: relative;
+  overflow: hidden;
+}
+
+.atmosphere__bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/assets/images/atmosphere-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.atmosphere__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.82);
+}
+
+.atmosphere__content {
+  position: relative;
+  z-index: 1;
+}
+
+.atmosphere__intro {
+  max-width: 600px;
+  margin-bottom: 72px;
+}
+
+.atmosphere__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-weight: 400;
+  color: var(--color-ivory);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.atmosphere__subtitle {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(245, 240, 232, 0.7);
+}
+
+.atmosphere__program {
+  margin-bottom: 64px;
+}
+
+.atmosphere__program-label {
+  margin-bottom: 32px;
+}
+
+.atmosphere__blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.atmosphere__block {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.12);
+}
+
+.atmosphere__block:first-child {
+  border-top: 1px solid rgba(201, 169, 110, 0.12);
+}
+
+.atmosphere__block-time {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 300;
+  color: var(--color-gold);
+  min-width: 120px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.atmosphere__block-border {
+  width: 2px;
+  align-self: stretch;
+  background: var(--color-gold);
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.atmosphere__block-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.atmosphere__block-title {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 400;
+  color: var(--color-ivory);
+}
+
+.atmosphere__block-desc {
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(245, 240, 232, 0.6);
+}
+
+/* Timeline */
+.atmosphere__timeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  padding: 0 16px;
+  max-width: 640px;
+}
+
+.atmosphere__timeline-track {
+  position: absolute;
+  top: 10px;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: rgba(201, 169, 110, 0.2);
+}
+
+.atmosphere__timeline-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.atmosphere__timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  background: var(--color-noir);
+  position: relative;
+  z-index: 1;
+}
+
+.atmosphere__timeline-dot--gold {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+}
+
+.atmosphere__timeline-time {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--color-gold);
+}
+
+.atmosphere__timeline-label {
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ivory-dim);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .atmosphere__bg {
+    background-attachment: scroll;
+  }
+
+  .atmosphere__block {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .atmosphere__block-border {
+    display: none;
+  }
+
+  .atmosphere__timeline {
+    display: none;
+  }
+}

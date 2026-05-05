@@ -1,0 +1,65 @@
+<section class="atmosphere" id="atmosphere">
+  <div class="atmosphere__bg"></div>
+  <div class="atmosphere__overlay"></div>
+
+  <div class="atmosphere__content section-py">
+    <div class="section-container">
+
+      <div class="atmosphere__intro" scrollReveal [delay]="0">
+        <p class="overline">{{ 'atmosphere.overline' | translate }}</p>
+        <div class="divider-gold" style="margin: 16px 0 28px"></div>
+        <h2 class="atmosphere__title">{{ 'atmosphere.title' | translate }}</h2>
+        <p class="atmosphere__subtitle">{{ 'atmosphere.subtitle' | translate }}</p>
+      </div>
+
+      <div class="atmosphere__program" scrollReveal [delay]="200">
+        <p class="atmosphere__program-label overline">{{ 'atmosphere.program_label' | translate }}</p>
+
+        <div class="atmosphere__blocks">
+          <div class="atmosphere__block">
+            <span class="atmosphere__block-time">{{ 'atmosphere.jazz_time' | translate }}</span>
+            <div class="atmosphere__block-border"></div>
+            <div class="atmosphere__block-body">
+              <h3 class="atmosphere__block-title">{{ 'atmosphere.jazz_title' | translate }}</h3>
+              <p class="atmosphere__block-desc">{{ 'atmosphere.jazz_desc' | translate }}</p>
+            </div>
+          </div>
+
+          <div class="atmosphere__block">
+            <span class="atmosphere__block-time">{{ 'atmosphere.dj_time' | translate }}</span>
+            <div class="atmosphere__block-border"></div>
+            <div class="atmosphere__block-body">
+              <h3 class="atmosphere__block-title">{{ 'atmosphere.dj_title' | translate }}</h3>
+              <p class="atmosphere__block-desc">{{ 'atmosphere.dj_desc' | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="atmosphere__timeline" scrollReveal [delay]="350">
+        <div class="atmosphere__timeline-track"></div>
+        <div class="atmosphere__timeline-item">
+          <div class="atmosphere__timeline-dot"></div>
+          <span class="atmosphere__timeline-time">19:00</span>
+          <span class="atmosphere__timeline-label">{{ 'atmosphere.timeline_open' | translate }}</span>
+        </div>
+        <div class="atmosphere__timeline-item">
+          <div class="atmosphere__timeline-dot atmosphere__timeline-dot--gold"></div>
+          <span class="atmosphere__timeline-time">20:00</span>
+          <span class="atmosphere__timeline-label">{{ 'atmosphere.timeline_jazz' | translate }}</span>
+        </div>
+        <div class="atmosphere__timeline-item">
+          <div class="atmosphere__timeline-dot atmosphere__timeline-dot--gold"></div>
+          <span class="atmosphere__timeline-time">22:20</span>
+          <span class="atmosphere__timeline-label">{{ 'atmosphere.timeline_dj' | translate }}</span>
+        </div>
+        <div class="atmosphere__timeline-item">
+          <div class="atmosphere__timeline-dot"></div>
+          <span class="atmosphere__timeline-time">02:00</span>
+          <span class="atmosphere__timeline-label">{{ 'atmosphere.timeline_close' | translate }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

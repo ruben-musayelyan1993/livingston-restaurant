@@ -1,0 +1,72 @@
+<section class="about section-py" id="about">
+  <div class="section-container">
+    <div class="about__grid">
+
+      <div class="about__text" scrollReveal [delay]="0">
+        <div>
+          <p class="overline">{{ 'about.overline' | translate }}</p>
+          <div class="divider-gold" style="margin: 16px 0 28px"></div>
+          <h2 class="about__title">{{ 'about.title' | translate }}</h2>
+        </div>
+
+        <div scrollReveal [delay]="150">
+          <p class="about__para">{{ 'about.p1' | translate }}</p>
+          <p class="about__para">{{ 'about.p2' | translate }}</p>
+        </div>
+
+        <div class="about__stats" scrollReveal [delay]="300">
+          <div class="about__stat">
+            <span class="about__stat-num">{{ 'about.stat1_num' | translate }}</span>
+            <span class="about__stat-label">{{ 'about.stat1_label' | translate }}</span>
+          </div>
+          <div class="about__stat-sep"></div>
+          <div class="about__stat">
+            <span class="about__stat-num">{{ 'about.stat2_num' | translate }}</span>
+            <span class="about__stat-label">{{ 'about.stat2_label' | translate }}</span>
+          </div>
+          <div class="about__stat-sep"></div>
+          <div class="about__stat">
+            <span class="about__stat-num">{{ 'about.stat3_num' | translate }}</span>
+            <span class="about__stat-label">{{ 'about.stat3_label' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about__slider-wrap" scrollReveal [delay]="200">
+        <div class="about__slider">
+
+          @for (slide of slides; track slide; let i = $index) {
+            <img
+              class="about__slide"
+              [class.about__slide--active]="i === current()"
+              [src]="slide"
+              [alt]="'Livingston ' + (i + 1)"
+              loading="lazy"
+            >
+          }
+
+          <div class="about__overlay"></div>
+
+          <div class="about__controls">
+            <div class="about__dots">
+              @for (slide of slides; track slide; let i = $index) {
+                <button
+                  class="about__dot"
+                  [class.about__dot--active]="i === current()"
+                  (click)="goTo(i)"
+                  [attr.aria-label]="'Slide ' + (i + 1)"
+                ></button>
+              }
+            </div>
+          </div>
+
+          <div class="about__progress-track">
+            <div class="about__progress-bar"></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

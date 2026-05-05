@@ -1,1 +1,308 @@
-/* You can add global styles to this file, and also import other style files */
+/* ── AcciaPiano font family ───────────────────── */
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-Thin.ttf') format('truetype');
+  font-weight: 100; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-ThinItalic.ttf') format('truetype');
+  font-weight: 100; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-ExtraLight.ttf') format('truetype');
+  font-weight: 200; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-ExtraLightItalic.ttf') format('truetype');
+  font-weight: 200; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-Light.ttf') format('truetype');
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-LightItalic.ttf') format('truetype');
+  font-weight: 300; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-Italic.ttf') format('truetype');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-Medium.ttf') format('truetype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-MediumItalic.ttf') format('truetype');
+  font-weight: 500; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-SemiBold.ttf') format('truetype');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-Bold.ttf') format('truetype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-BoldItalic.ttf') format('truetype');
+  font-weight: 700; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-ExtraBold.ttf') format('truetype');
+  font-weight: 800; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'AcciaPiano';
+  src: url('/fonts/AcciaPiano-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800; font-style: italic; font-display: swap;
+}
+
+:root {
+  --color-noir:       #0A0A0A;
+  --color-charcoal:   #141414;
+  --color-deep-gray:  #1E1E1E;
+  --color-gold:       #C9A96E;
+  --color-gold-light: #E8D5A3;
+  --color-ivory:      #F5F0E8;
+  --color-ivory-dim:  rgba(245, 240, 232, 0.55);
+  --color-burgundy:   #4A1020;
+  --color-slate:      #2C2C2C;
+
+  --font-display: 'AcciaPiano', Georgia, serif;
+  --font-body:    'AcciaPiano', system-ui, sans-serif;
+
+  --section-py: 120px;
+  --content-width: 1280px;
+  --side-px: 80px;
+}
+
+/* Large desktop: 1441–1679px */
+@media (min-width: 1441px) {
+  :root {
+    --content-width: 1380px;
+    --section-py: 130px;
+  }
+}
+
+/* XL desktop: 1680–1920px */
+@media (min-width: 1680px) {
+  :root {
+    --content-width: 1560px;
+    --section-py: 148px;
+  }
+}
+
+/* Full HD / 2K: 1921–2560px */
+@media (min-width: 1921px) {
+  :root {
+    --content-width: 1760px;
+    --side-px: 100px;
+    --section-py: 160px;
+  }
+}
+
+/* 27" QHD и выше: 2561px+ */
+@media (min-width: 2561px) {
+  :root {
+    --content-width: 1980px;
+    --side-px: 120px;
+    --section-py: 180px;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root { --section-py: 72px; --side-px: 48px; }
+}
+
+@media (max-width: 768px) {
+  :root { --section-py: 56px; --side-px: 24px; }
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: clamp(14px, 0.42vw + 10px, 18px);
+}
+
+body {
+  background: var(--color-noir);
+  color: var(--color-ivory);
+  font-family: var(--font-body);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-body);
+  border: none;
+  background: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.section-container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--side-px);
+}
+
+.section-py {
+  padding-top: var(--section-py);
+  padding-bottom: var(--section-py);
+}
+
+/* Gold divider */
+.divider-gold {
+  width: 60px;
+  height: 1px;
+  background: var(--color-gold);
+  opacity: 0.6;
+}
+
+.divider-gold--center {
+  margin: 0 auto;
+}
+
+/* Overline label */
+.overline {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+/* Underline input */
+.input-underline {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.3);
+  color: var(--color-ivory);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 300;
+  padding: 10px 0;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  outline: none;
+}
+
+.input-underline::placeholder {
+  color: rgba(245, 240, 232, 0.3);
+}
+
+.input-underline:focus {
+  border-bottom-color: var(--color-gold);
+  box-shadow: 0 1px 0 0 var(--color-gold);
+}
+
+.input-underline option {
+  background: var(--color-charcoal);
+  color: var(--color-ivory);
+}
+
+/* Btn ghost */
+.btn-ghost {
+  display: inline-block;
+  padding: 14px 36px;
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold);
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: background 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  background: transparent;
+}
+
+.btn-ghost:hover {
+  background: var(--color-gold);
+  color: var(--color-noir);
+}
+
+/* Btn solid */
+.btn-solid {
+  display: inline-block;
+  width: 100%;
+  padding: 16px 36px;
+  background: var(--color-gold);
+  color: var(--color-noir);
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.25s ease;
+}
+
+.btn-solid:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.btn-solid:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Button shimmer sweep — used by hero CTA and header reserve */
+@keyframes btnShimmer {
+  0%        { left: -120%; }
+  45%, 100% { left: 160%;  }
+}
+
+/* Film grain */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}

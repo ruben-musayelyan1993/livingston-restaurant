@@ -1,0 +1,38 @@
+<section class="events section-py" id="events">
+  <div class="section-container">
+
+    <div class="events__grid">
+      <div class="events__image-wrap" scrollReveal [delay]="0">
+        <div class="events__image-frame">
+          <img class="events__image" src="/assets/images/events-hall.jpg" alt="Livingston hall" loading="lazy">
+        </div>
+        <div class="events__capacity">
+          <span class="events__capacity-num">150</span>
+          <span class="events__capacity-label">{{ 'events.capacity_label' | translate }}</span>
+          <span class="events__capacity-sub">{{ 'events.capacity_sub' | translate }}</span>
+        </div>
+      </div>
+
+      <div class="events__text" scrollReveal [delay]="200">
+        <p class="overline">{{ 'events.overline' | translate }}</p>
+        <div class="divider-gold" style="margin: 16px 0 28px"></div>
+        <h2 class="events__title">{{ 'events.title' | translate }}</h2>
+        <p class="events__subtitle">{{ 'events.subtitle' | translate }}</p>
+
+        <ul class="events__list">
+          @for (type of eventTypes; track type) {
+            <li class="events__list-item">
+              <span class="events__list-bullet">◆</span>
+              {{ 'events.types.' + type | translate }}
+            </li>
+          }
+        </ul>
+
+        <button class="btn-ghost" (click)="scrollToReservation()">
+          {{ 'events.cta' | translate }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>

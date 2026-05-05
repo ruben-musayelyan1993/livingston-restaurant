@@ -1,0 +1,40 @@
+<header class="header" [class.header--scrolled]="scrolled()">
+  <div class="header__inner">
+
+    <button class="header__logo" (click)="scrollTo('hero')" aria-label="Livingston">
+      <span class="header__logo-text">LIVINGSTON</span>
+    </button>
+
+    <nav class="header__nav" [class.header__nav--open]="menuOpen()">
+      <button class="header__nav-close" (click)="closeMenu()" aria-label="Close menu">
+        <span></span><span></span>
+      </button>
+      <a class="header__link" (click)="scrollTo('about')">{{ 'nav.about' | translate }}</a>
+      <a class="header__link" (click)="scrollTo('cuisine')">{{ 'nav.cuisine' | translate }}</a>
+      <a class="header__link" (click)="scrollTo('atmosphere')">{{ 'nav.atmosphere' | translate }}</a>
+      <a class="header__link" (click)="scrollTo('events')">{{ 'nav.events' | translate }}</a>
+      <a class="header__link" (click)="scrollTo('contacts')">{{ 'nav.contacts' | translate }}</a>
+    </nav>
+
+    <div class="header__actions">
+      <div class="lang-switcher">
+        <button class="lang-btn" [class.lang-btn--active]="langSvc.current() === 'hy'" (click)="langSvc.set('hy')">AM</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" [class.lang-btn--active]="langSvc.current() === 'ru'" (click)="langSvc.set('ru')">RU</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" [class.lang-btn--active]="langSvc.current() === 'en'" (click)="langSvc.set('en')">EN</button>
+      </div>
+      <button class="btn-ghost header__reserve" (click)="openReservation()">
+        {{ 'hero.cta' | translate }}
+      </button>
+      <button class="header__burger" [class.header__burger--open]="menuOpen()" (click)="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+@if (menuOpen()) {
+  <div class="header__overlay" (click)="closeMenu()"></div>
+}

@@ -1,0 +1,112 @@
+<section class="reservation section-py" id="reservation">
+  <div class="section-container">
+
+    <div class="reservation__header" scrollReveal [delay]="0">
+      <p class="overline">{{ 'reservation.overline' | translate }}</p>
+      <div class="divider-gold divider-gold--center" style="margin: 16px auto 28px"></div>
+      <h2 class="reservation__title">{{ 'reservation.title' | translate }}</h2>
+      <p class="reservation__subtitle">{{ 'reservation.subtitle' | translate }}</p>
+    </div>
+
+    <form class="reservation__form" [formGroup]="form" (ngSubmit)="submit()" scrollReveal [delay]="150" novalidate>
+
+      <!-- Honeypot — скрыто от пользователей -->
+      <input type="text" formControlName="_hp" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label" for="r-name">{{ 'reservation.fields.name' | translate }}</label>
+          <input id="r-name" type="text" formControlName="name" class="input-underline"
+                 [placeholder]="'reservation.fields.name' | translate">
+          @if (fieldError('name', 'required')) {
+            <span class="form-error">{{ 'reservation.validation.name_required' | translate }}</span>
+          } @else if (fieldError('name', 'minlength')) {
+            <span class="form-error">{{ 'reservation.validation.name_min' | translate }}</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="r-email">{{ 'reservation.fields.email' | translate }}</label>
+          <input id="r-email" type="email" formControlName="email" class="input-underline"
+                 [placeholder]="'reservation.fields.email' | translate">
+          @if (fieldError('email', 'required')) {
+            <span class="form-error">{{ 'reservation.validation.email_required' | translate }}</span>
+          } @else if (fieldError('email', 'email')) {
+            <span class="form-error">{{ 'reservation.validation.email_invalid' | translate }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label" for="r-phone">{{ 'reservation.fields.phone' | translate }}</label>
+          <input id="r-phone" type="tel" formControlName="phone" class="input-underline"
+                 [placeholder]="'+374 XX XX XX XX'">
+          @if (fieldError('phone', 'required')) {
+            <span class="form-error">{{ 'reservation.validation.phone_required' | translate }}</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="r-date">{{ 'reservation.fields.date' | translate }}</label>
+          <input id="r-date" type="date" formControlName="date" class="input-underline" [min]="todayStr">
+          @if (fieldError('date', 'required')) {
+            <span class="form-error">{{ 'reservation.validation.date_required' | translate }}</span>
+          } @else if (fieldError('date', 'pastDate')) {
+            <span class="form-error">{{ 'reservation.validation.date_past' | translate }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-row form-row--single">
+        <div class="form-field">
+          <label class="form-label" for="r-guests">{{ 'reservation.fields.guests' | translate }}</label>
+          <select id="r-guests" formControlName="guests" class="input-underline">
+            @for (n of [1,2,3,4,5,6]; track n) {
+              <option [value]="n">{{ 'reservation.fields.guests_' + n | translate }}</option>
+            }
+            <option value="7">{{ 'reservation.fields.guests_more' | translate }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="r-comment">{{ 'reservation.fields.comment' | translate }}</label>
+        <textarea id="r-comment" formControlName="comment" class="input-underline textarea"
+                  [placeholder]="'reservation.fields.comment' | translate" rows="3"></textarea>
+      </div>
+
+      @if (status() === 'error') {
+        <p class="form-error-global">{{ 'reservation.error' | translate }}</p>
+      }
+
+      <button type="submit" class="btn-solid" [disabled]="status() === 'loading'">
+        @if (status() === 'loading') {
+          <span class="spinner"></span>
+          {{ 'reservation.submitting' | translate }}
+        } @else {
+          {{ 'reservation.submit' | translate }}
+        }
+      </button>
+
+    </form>
+  </div>
+</section>
+
+<!-- Success Modal -->
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="closeModal()" aria-label="Close">×</button>
+      <div class="modal-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="13" stroke="#C9A96E" stroke-width="1"/>
+          <path d="M8 14l4 4 8-8" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2 class="modal-title">{{ 'reservation.success.title' | translate }}</h2>
+      <p class="modal-message">{{ 'reservation.success.message' | translate }}</p>
+      <button class="btn-ghost" (click)="closeModal()">{{ 'reservation.success.close' | translate }}</button>
+    </div>
+  </div>
+}

@@ -1,0 +1,127 @@
+{
+  "nav": {
+    "about": "About",
+    "cuisine": "Cuisine",
+    "atmosphere": "Atmosphere",
+    "events": "Events",
+    "reservation": "Reservation",
+    "contacts": "Contacts"
+  },
+  "hero": {
+    "tagline": "European Haute Cuisine · Yerevan",
+    "cta": "Reserve a Table"
+  },
+  "about": {
+    "overline": "About",
+    "title": "A Philosophy of Freedom",
+    "p1": "Livingston opened on October 4, 2019, and from its very first day claimed a unique place on Armenia's gastronomic map. The restaurant's concept is inspired by Richard Bach's novel \"Jonathan Livingston Seagull\" — a story about freedom, the pursuit of perfection, and the desire to transcend the limits of what is possible.",
+    "p2": "Located on the 9th floor of the Sports and Concert Complex, the restaurant offers panoramic views of Yerevan — a city that reveals itself from an entirely new perspective from here. Every detail has been considered: from the table setting to the final chord of the jazz orchestra.",
+    "stat1_num": "2019",
+    "stat1_label": "Year opened",
+    "stat2_num": "9",
+    "stat2_label": "Floor · City panorama",
+    "stat3_num": "150",
+    "stat3_label": "Guests capacity"
+  },
+  "cuisine": {
+    "overline": "Cuisine",
+    "title": "Haute Cuisine",
+    "subtitle": "European haute cuisine at Livingston means signature dishes built on a balance of flavors, impeccable technique, and respect for every ingredient.",
+    "dishes": {
+      "carpaccio_name": "Beef Carpaccio",
+      "carpaccio_desc": "With mustard cream, capers and parmesan",
+      "lamb_name": "Slow-roasted Lamb Shoulder",
+      "lamb_desc": "With pak choi and red wine jus",
+      "chicken_name": "Chicken Breast L'Orange",
+      "chicken_desc": "A French classic in an author's interpretation",
+      "trout_name": "Trout Fillet",
+      "trout_desc": "With fennel velouté and caviar",
+      "octopus_name": "Grilled Octopus",
+      "octopus_desc": "With chickpea purée and chorizo",
+      "turkey_name": "Turkey Fillet",
+      "turkey_desc": "With tonnato sauce and crispy capers"
+    }
+  },
+  "atmosphere": {
+    "overline": "Atmosphere",
+    "title": "An Evening to Remember",
+    "subtitle": "Every evening at Livingston is more than dinner. It is a performance where music, light and the view of nocturnal Yerevan play the leading roles.",
+    "program_label": "Evening Programme",
+    "jazz_title": "Livingston Jazz Orchestra",
+    "jazz_desc": "Under the baton of Maestro Yervand Yerznkyan — classics of the 1960s–90s performed live",
+    "jazz_time": "20:00 – 22:20",
+    "dj_title": "DJ & Live Performances",
+    "dj_desc": "Contemporary club music from Yerevan's finest artists",
+    "dj_time": "22:20 – 02:00",
+    "timeline_open": "Doors open",
+    "timeline_jazz": "Jazz Orchestra",
+    "timeline_dj": "DJ set",
+    "timeline_close": "Close"
+  },
+  "events": {
+    "overline": "Events",
+    "title": "A Space for Special Occasions",
+    "subtitle": "Livingston hosts corporate dinners, wedding receptions and official state events. The hall accommodates up to 150 guests.",
+    "capacity_label": "guests",
+    "capacity_sub": "maximum capacity",
+    "types": {
+      "corporate": "Corporate Events",
+      "wedding": "Wedding Receptions",
+      "birthday": "Birthday Celebrations",
+      "reception": "Official Receptions"
+    },
+    "cta": "Submit a Request"
+  },
+  "reservation": {
+    "overline": "Reservation",
+    "title": "Reserve a Table",
+    "subtitle": "Leave a request and our manager will contact you to confirm your booking",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "date": "Date of visit",
+      "guests": "Number of guests",
+      "guests_1": "1 guest",
+      "guests_2": "2 guests",
+      "guests_3": "3 guests",
+      "guests_4": "4 guests",
+      "guests_5": "5 guests",
+      "guests_6": "6 guests",
+      "guests_more": "7+ guests",
+      "comment": "Comment or occasion (optional)"
+    },
+    "submit": "Submit Request",
+    "submitting": "Sending...",
+    "error": "Submission failed. Please call us: +374 10 39 20 20",
+    "success": {
+      "title": "Thank you!",
+      "message": "Your reservation request has been received. Our manager will contact you shortly to confirm your booking.",
+      "close": "Close"
+    },
+    "validation": {
+      "name_required": "Please enter your name",
+      "name_min": "Minimum 2 characters",
+      "email_required": "Please enter your email",
+      "email_invalid": "Invalid email address",
+      "phone_required": "Please enter your phone number",
+      "date_required": "Please select a date",
+      "date_past": "Date cannot be in the past"
+    }
+  },
+  "contacts": {
+    "overline": "Contacts",
+    "title": "Find Us",
+    "address_label": "Address",
+    "address": "1 Tsitsernakaberd Park, 9th floor\nKaren Demirchyan Sports & Concert Complex\nYerevan, Armenia",
+    "phone_label": "Phone",
+    "hours_label": "Hours",
+    "hours": "Daily 19:00 – 02:00",
+    "dress_label": "Dress code",
+    "dress": "Cocktail / Classic"
+  },
+  "footer": {
+    "tagline": "European Haute Cuisine · Yerevan",
+    "copyright": "© 2024 Livingston Restaurant. All rights reserved."
+  }
+}

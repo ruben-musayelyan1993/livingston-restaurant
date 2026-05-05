@@ -12,7 +12,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withFetch()),
-    provideTranslateService({ defaultLanguage: 'ru' }),
+    provideTranslateService({ fallbackLang: 'ru' }),
     provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),
     provideClientHydration(withEventReplay()),
   ],

@@ -4,29 +4,134 @@ import {
   isMainModule,
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
-import express from 'express';
+import express, { type Request, type Response, type NextFunction } from 'express';
 import { join } from 'node:path';
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
+import multer from 'multer';
+import cookieParser from 'cookie-parser';
+import { rateLimit } from 'express-rate-limit';
+import bcrypt from 'bcryptjs';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
+
+// In dev (ng serve) dist/browser doesn't exist — fall back to source public/
+const assetsBase = existsSync(browserDistFolder)
+  ? browserDistFolder
+  : join(process.cwd(), 'public');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
+app.use(cookieParser());
 
-/**
- * Serve static files from /browser
- */
+// ── Admin auth ────────────────────────────────────────────────────────────────
+const ADMIN_PASSWORD_RAW = process.env['ADMIN_PASSWORD'] || 'livingston2024';
+// Pre-hash at startup — if env already contains a bcrypt hash, use it as-is
+const ADMIN_HASH = ADMIN_PASSWORD_RAW.startsWith('$2')
+  ? ADMIN_PASSWORD_RAW
+  : bcrypt.hashSync(ADMIN_PASSWORD_RAW, 10);
+
+const SESSION_TTL = 8 * 60 * 60 * 1000; // 8 hours
+const sessions = new Map<string, number>(); // token → expiresAt
+
+// Remove expired sessions to prevent memory growth
+function pruneExpired(): void {
+  const now = Date.now();
+  for (const [token, exp] of sessions) {
+    if (now > exp) sessions.delete(token);
+  }
+}
+
+function requireAdmin(req: Request, res: Response, next: NextFunction): void {
+  const token = (req.cookies as Record<string, string>)?.['admin_session'];
+  if (!token) { res.status(401).json({ error: 'Unauthorized' }); return; }
+  const exp = sessions.get(token);
+  if (!exp || Date.now() > exp) {
+    sessions.delete(token);
+    res.clearCookie('admin_session', { path: '/' });
+    res.status(401).json({ error: 'Session expired' });
+    return;
+  }
+  next();
+}
+
+// ── Rate limiter: 5 login attempts per 15 min per IP ──────────────────────────
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: 'Слишком много попыток. Попробуйте через 15 минут.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// ── Login ─────────────────────────────────────────────────────────────────────
+app.post('/admin/api/login', loginLimiter, express.json(), async (req: Request, res: Response): Promise<void> => {
+  const { password } = req.body as { password: string };
+  const valid = await bcrypt.compare(password ?? '', ADMIN_HASH);
+  if (!valid) { res.status(401).json({ error: 'Неверный пароль' }); return; }
+
+  pruneExpired();
+  const token = randomBytes(32).toString('hex');
+  sessions.set(token, Date.now() + SESSION_TTL);
+
+  res.cookie('admin_session', token, {
+    httpOnly: true,
+    sameSite: 'strict',
+    maxAge: SESSION_TTL,
+    secure: process.env['NODE_ENV'] === 'production',
+    path: '/',
+  });
+  res.json({ ok: true });
+});
+
+// ── Logout ────────────────────────────────────────────────────────────────────
+app.post('/admin/api/logout', (req: Request, res: Response): void => {
+  const token = (req.cookies as Record<string, string>)?.['admin_session'];
+  if (token) sessions.delete(token);
+  res.clearCookie('admin_session', { path: '/' });
+  res.json({ ok: true });
+});
+
+// ── Translations ──────────────────────────────────────────────────────────────
+app.get('/admin/api/translations', requireAdmin, (_req: Request, res: Response): void => {
+  const result: Record<string, unknown> = {};
+  for (const lang of ['ru', 'en', 'hy']) {
+    result[lang] = JSON.parse(readFileSync(join(assetsBase, `i18n/${lang}.json`), 'utf-8'));
+  }
+  res.json(result);
+});
+
+app.put('/admin/api/translations', requireAdmin, express.json({ limit: '2mb' }), (req: Request, res: Response): void => {
+  const body = req.body as Record<string, unknown>;
+  for (const lang of ['ru', 'en', 'hy']) {
+    if (body[lang]) {
+      writeFileSync(join(assetsBase, `i18n/${lang}.json`), JSON.stringify(body[lang], null, 2));
+    }
+  }
+  res.json({ ok: true });
+});
+
+// ── Images ────────────────────────────────────────────────────────────────────
+app.get('/admin/api/images', requireAdmin, (_req: Request, res: Response): void => {
+  const dir = join(assetsBase, 'assets/images');
+  const files = readdirSync(dir)
+    .filter(f => /\.(jpg|jpeg|png|webp|svg|gif)$/i.test(f))
+    .map(name => ({ name, url: `/assets/images/${name}` }));
+  res.json(files);
+});
+
+const imageStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, join(assetsBase, 'assets/images')),
+  filename: (req, _file, cb) => cb(null, (req.params as { name: string }).name),
+});
+const upload = multer({ storage: imageStorage, limits: { fileSize: 15 * 1024 * 1024 } });
+
+app.post('/admin/api/images/:name', requireAdmin, upload.single('file'), (req: Request, res: Response): void => {
+  res.json({ ok: true, url: `/assets/images/${req.params['name']}` });
+});
+
+// ── Static files ──────────────────────────────────────────────────────────────
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
@@ -35,9 +140,7 @@ app.use(
   }),
 );
 
-/**
- * Handle all other requests by rendering the Angular application.
- */
+// ── Angular SSR ───────────────────────────────────────────────────────────────
 app.use((req, res, next) => {
   angularApp
     .handle(req)
@@ -45,22 +148,12 @@ app.use((req, res, next) => {
     .catch(next);
 });
 
-/**
- * Start the server if this module is the main entry point, or it is ran via PM2.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
- */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
   const port = process.env['PORT'] || 4000;
   app.listen(port, (error) => {
-    if (error) {
-      throw error;
-    }
-
+    if (error) throw error;
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
 
-/**
- * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
- */
 export const reqHandler = createNodeRequestHandler(app);

@@ -1,0 +1,31 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="login-logo__text">LIVINGSTON</span>
+      <span class="login-logo__sub">Admin Panel</span>
+    </div>
+
+    <form class="login-form" (ngSubmit)="submit()">
+      <div class="login-field">
+        <label class="login-label">Пароль</label>
+        <input
+          class="login-input"
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Введите пароль"
+          autocomplete="current-password"
+          [disabled]="loading()"
+        />
+      </div>
+
+      @if (error()) {
+        <p class="login-error">{{ error() }}</p>
+      }
+
+      <button class="login-btn" type="submit" [disabled]="loading()">
+        @if (loading()) { Вход... } @else { Войти }
+      </button>
+    </form>
+  </div>
+</div>

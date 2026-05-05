@@ -132,9 +132,6 @@
   font-size: 0.625rem;
   position: relative;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.35) !important;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 

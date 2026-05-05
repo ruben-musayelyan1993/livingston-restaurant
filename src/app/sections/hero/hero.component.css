@@ -106,41 +106,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Scroll indicator */
-.hero__scroll {
-  position: absolute;
-  bottom: 36px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  opacity: 0;
-  animation: heroFadeIn 0.8s ease-out 1.2s forwards;
-}
-
-.hero__scroll-text {
-  font-family: var(--font-body);
-  font-size: 0.5625rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-ivory-dim);
-}
-
-.hero__scroll-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--color-gold), transparent);
-  animation: scrollPulse 2s ease-in-out 1.5s infinite;
-}
-
-@keyframes scrollPulse {
-  0%, 100% { opacity: 0.4; transform: scaleY(1); }
-  50% { opacity: 1; transform: scaleY(1.2); }
-}
 
 @media (max-width: 768px) {
   .hero__bg {

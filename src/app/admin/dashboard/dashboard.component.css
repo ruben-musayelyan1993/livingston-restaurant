@@ -25,7 +25,10 @@
   font-weight: 400;
   letter-spacing: 0.2em;
   color: #F5F0E8;
+  text-decoration: none;
+  transition: color 0.2s;
 }
+.adm-header__logo:hover { color: #C9A96E; }
 
 .adm-header__sub {
   font-size: 0.5625rem;

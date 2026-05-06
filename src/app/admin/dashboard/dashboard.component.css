@@ -200,10 +200,67 @@
   gap: 20px;
 }
 
+/* ── Dish image upload ───────────────────────────── */
+.adm-dish-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.adm-dish-filename {
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  color: rgba(201, 169, 110, 0.5);
+  border-bottom: 1px dashed rgba(201, 169, 110, 0.3);
+  padding-bottom: 1px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.adm-dish-filename:hover { color: #C9A96E; }
+
+.adm-dish-btn {
+  font-family: 'AcciaPiano', system-ui, sans-serif;
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  background: none;
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  color: #C9A96E;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.adm-dish-btn:hover:not(:disabled) { background: #C9A96E; color: #0a0a0a; }
+.adm-dish-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.adm-group__label {
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 232, 0.35);
+  padding-bottom: 4px;
+}
+
+.adm-group--cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 20px;
+}
+
+.adm-group__sep {
+  height: 1px;
+  background: rgba(201, 169, 110, 0.08);
+  margin: 4px 0;
+}
+
 .adm-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
 .adm-field__label {

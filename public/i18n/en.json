@@ -2,12 +2,13 @@
   "nav": {
     "about": "About",
     "cuisine": "Cuisine",
-    "atmosphere": "Atmosphere",
-    "events": "Events",
+    "atmosphere": "Upcoming Events",
+    "events": "Private Events",
     "reservation": "Reservation",
     "contacts": "Contacts"
   },
   "hero": {
+    "est": "EST. 2019 · YEREVAN",
     "tagline": "European Haut Cuisine · Yerevan",
     "cta": "Reserve a Table"
   },
@@ -43,7 +44,7 @@
     }
   },
   "atmosphere": {
-    "overline": "Atmosphere",
+    "overline": "Upcoming Events",
     "title": "An Evening to Remember",
     "subtitle": "Every evening at Livingston is more than dinner. It is a performance where music, light and the view of nocturnal Yerevan play the leading roles.",
     "program_label": "Evening Programme",
@@ -56,10 +57,19 @@
     "timeline_open": "Doors open",
     "timeline_jazz": "Jazz Orchestra",
     "timeline_dj": "DJ set",
-    "timeline_close": "Close"
+    "timeline_close": "Close",
+    "prog3_time": "19:00 – 20:00",
+    "prog3_title": "Chef's Dinner",
+    "prog3_desc": "Exclusive tasting menu by the head chef with wine pairing",
+    "prog4_time": "20:00 – 21:30",
+    "prog4_title": "Lounge Evening",
+    "prog4_desc": "Relaxed setting, soft lighting and gentle background music",
+    "prog5_time": "20:00 – 21:30",
+    "prog5_title": "Private Events",
+    "prog5_desc": "Intimate dinners, business meetings and private celebrations"
   },
   "events": {
-    "overline": "Events",
+    "overline": "Private Events",
     "title": "A Space for Special Occasions",
     "subtitle": "Livingston hosts corporate dinners, wedding receptions and official state events. The hall accommodates up to 150 guests.",
     "capacity_label": "guests",
@@ -106,7 +116,8 @@
       "email_invalid": "Invalid email address",
       "phone_required": "Please enter your phone number",
       "date_required": "Please select a date",
-      "date_past": "Date cannot be in the past"
+      "date_past": "Date cannot be in the past",
+      "phone_format": "Use international format: +374 XX XXX XXX"
     }
   },
   "contacts": {
@@ -123,5 +134,38 @@
   "footer": {
     "tagline": "European Haute Cuisine · Yerevan",
     "copyright": "© 2024 Livingston Restaurant. All rights reserved."
+  },
+  "private_event": {
+    "overline": "Private Events",
+    "title": "Submit a Request",
+    "fields": {
+      "name": "Name",
+      "company": "Company name",
+      "event_type": "Event type",
+      "type_wedding": "Wedding",
+      "type_birthday": "Birthday",
+      "type_corporate": "Corporate event",
+      "type_other": "Other",
+      "guests": "Number of guests",
+      "date": "Date of visit",
+      "comment": "Comment (optional)"
+    },
+    "submit": "Submit Request",
+    "submitting": "Sending...",
+    "error": "Submission failed. Please call us: +374 10 39 20 20",
+    "success": {
+      "title": "Thank you!",
+      "message": "Your request has been received. Our manager will contact you shortly.",
+      "close": "Close"
+    },
+    "validation": {
+      "name_required": "Please enter your name",
+      "name_min": "Minimum 2 characters",
+      "type_required": "Please select an event type",
+      "guests_required": "Please enter the number of guests",
+      "guests_min": "Minimum 1 guest",
+      "date_required": "Please select a date",
+      "date_past": "Date cannot be in the past"
+    }
   }
 }

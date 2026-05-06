@@ -3,20 +3,20 @@
   <!-- Header -->
   <header class="adm-header">
     <a class="adm-header__logo" routerLink="/">LIVINGSTON <span class="adm-header__sub">admin</span></a>
-    <button class="adm-header__logout" (click)="logout()">Выйти</button>
+    <button class="adm-header__logout" (click)="logout()">Log out</button>
   </header>
 
   @if (loading()) {
-    <div class="adm-loading">Загрузка...</div>
+    <div class="adm-loading">Loading...</div>
   } @else {
 
     <!-- Tab switcher -->
     <div class="adm-tabs">
       <button class="adm-tab" [class.adm-tab--active]="activeTab() === 'texts'" (click)="activeTab.set('texts')">
-        Тексты
+        Texts
       </button>
       <button class="adm-tab" [class.adm-tab--active]="activeTab() === 'images'" (click)="activeTab.set('images')">
-        Изображения
+        Images
       </button>
     </div>
 
@@ -34,13 +34,13 @@
 
           <div class="adm-save-row">
             @if (saveStatus() === 'ok') {
-              <span class="adm-save-msg adm-save-msg--ok">Сохранено ✓</span>
+              <span class="adm-save-msg adm-save-msg--ok">Saved ✓</span>
             }
             @if (saveStatus() === 'err') {
-              <span class="adm-save-msg adm-save-msg--err">Ошибка</span>
+              <span class="adm-save-msg adm-save-msg--err">Error</span>
             }
             <button class="adm-btn-save" (click)="save()" [disabled]="saving()">
-              {{ saving() ? 'Сохранение...' : 'Сохранить' }}
+              {{ saving() ? 'Saving...' : 'Save' }}
             </button>
           </div>
         </div>
@@ -59,27 +59,85 @@
           </nav>
 
           <div class="adm-fields">
-            @for (field of activeSection.fields; track field.key) {
-              <div class="adm-field">
-                <label class="adm-field__label">{{ field.label }}</label>
-                @if (field.multiline) {
-                  <textarea
-                    class="adm-field__input adm-field__textarea"
-                    [ngModel]="getField(field.key)"
-                    (ngModelChange)="setField(field.key, $event)"
-                    [name]="field.key"
-                    rows="3">
-                  </textarea>
-                } @else {
-                  <input
-                    class="adm-field__input"
-                    type="text"
-                    [ngModel]="getField(field.key)"
-                    (ngModelChange)="setField(field.key, $event)"
-                    [name]="field.key"
-                  />
+
+            @if (activeSection.groups) {
+
+              @for (group of activeSection.groups; track $index) {
+                @if (group.label) {
+                  <p class="adm-group__label">{{ group.label }}</p>
                 }
-              </div>
+                <div [class.adm-group--cols]="group.cols" [style.grid-template-columns]="group.cols ? 'repeat(' + group.cols + ', 1fr)' : null">
+                  @for (field of group.fields; track field.key) {
+                    <div class="adm-field">
+                      <label class="adm-field__label">{{ field.label }}</label>
+                      @if (field.multiline) {
+                        <textarea
+                          class="adm-field__input adm-field__textarea"
+                          [ngModel]="getField(field.key)"
+                          (ngModelChange)="setField(field.key, $event)"
+                          [name]="field.key"
+                          rows="3">
+                        </textarea>
+                      } @else {
+                        <input
+                          class="adm-field__input"
+                          type="text"
+                          [ngModel]="getField(field.key)"
+                          (ngModelChange)="setField(field.key, $event)"
+                          [name]="field.key"
+                        />
+                      }
+                    </div>
+                  }
+                </div>
+                @if (group.imageKey) {
+                  <div class="adm-dish-upload">
+                    <a class="adm-dish-filename"
+                       [href]="dishImageUrl(group.imageKey)"
+                       target="_blank" rel="noopener">{{ group.imageKey }}</a>
+                    <button class="adm-dish-btn"
+                            (click)="triggerDishUpload(group.imageKey)"
+                            [disabled]="uploadingImage() === group.imageKey">
+                      {{ uploadingImage() === group.imageKey ? 'Uploading...' : 'Replace photo' }}
+                    </button>
+                    <input
+                      [id]="'dish-upload-' + group.imageKey"
+                      type="file" accept="image/*"
+                      style="display:none"
+                      (change)="onFileSelected($event, group.imageKey)"
+                    />
+                  </div>
+                }
+                @if (group.dividerAfter) {
+                  <div class="adm-group__sep"></div>
+                }
+              }
+
+            } @else {
+
+              @for (field of (activeSection.fields ?? []); track field.key) {
+                <div class="adm-field">
+                  <label class="adm-field__label">{{ field.label }}</label>
+                  @if (field.multiline) {
+                    <textarea
+                      class="adm-field__input adm-field__textarea"
+                      [ngModel]="getField(field.key)"
+                      (ngModelChange)="setField(field.key, $event)"
+                      [name]="field.key"
+                      rows="3">
+                    </textarea>
+                  } @else {
+                    <input
+                      class="adm-field__input"
+                      type="text"
+                      [ngModel]="getField(field.key)"
+                      (ngModelChange)="setField(field.key, $event)"
+                      [name]="field.key"
+                    />
+                  }
+                </div>
+              }
+
             }
           </div>
         </div>
@@ -90,21 +148,21 @@
     <!-- ── IMAGES TAB ────────────────────────────────── -->
     @if (activeTab() === 'images') {
       <div class="adm-images">
-        <p class="adm-images__hint">Нажмите «Заменить» чтобы загрузить новое изображение с тем же именем.</p>
+        <p class="adm-images__hint">Click "Replace" to upload a new image with the same filename.</p>
         <div class="adm-img-grid">
           @for (img of images(); track img.name) {
             <div class="adm-img-card">
               <div class="adm-img-card__preview">
                 <img [src]="imageUrl(img)" [alt]="img.name" loading="lazy" />
                 @if (uploadingImage() === img.name) {
-                  <div class="adm-img-card__uploading">Загрузка...</div>
+                  <div class="adm-img-card__uploading">Uploading...</div>
                 }
               </div>
               <div class="adm-img-card__body">
                 <span class="adm-img-card__name">{{ img.name }}</span>
                 <button class="adm-img-card__btn" (click)="triggerUpload(img.name)"
                   [disabled]="uploadingImage() === img.name">
-                  Заменить
+                  Replace
                 </button>
                 <input
                   [id]="'upload-' + img.name"

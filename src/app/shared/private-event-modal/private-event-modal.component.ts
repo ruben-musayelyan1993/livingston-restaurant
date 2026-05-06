@@ -7,20 +7,10 @@ import {
   ValidatorFn, Validators,
 } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ReservationModalService } from '../../core/reservation-modal.service';
-import { ReservationService, ReservationPayload } from '../../core/reservation.service';
+import { PrivateEventModalService } from '../../core/private-event-modal.service';
+import { PrivateEventService, PrivateEventPayload } from '../../core/private-event.service';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
-
-// E.164: +[1-9][6–14 digits]. Strips spaces, dashes, parens, dots before check.
-// Covers Armenia (+374), Russia/KZ (+7), Ukraine (+380), EU and beyond.
-function phoneValidator(): ValidatorFn {
-  return (control: AbstractControl) => {
-    if (!control.value) return null;
-    const normalized = (control.value as string).replace(/[\s\-().]/g, '');
-    return /^\+[1-9]\d{6,14}$/.test(normalized) ? null : { phoneFormat: true };
-  };
-}
 
 function minTodayValidator(): ValidatorFn {
   return (control: AbstractControl) => {
@@ -32,28 +22,30 @@ function minTodayValidator(): ValidatorFn {
 }
 
 @Component({
-  selector: 'app-reservation-modal',
+  selector: 'app-private-event-modal',
   standalone: true,
   imports: [ReactiveFormsModule, TranslatePipe],
-  templateUrl: './reservation-modal.component.html',
-  styleUrl: './reservation-modal.component.css',
+  templateUrl: './private-event-modal.component.html',
+  styleUrl: './private-event-modal.component.css',
 })
-export class ReservationModalComponent {
+export class PrivateEventModalComponent {
   private readonly platformId = inject(PLATFORM_ID);
-  readonly svc = inject(ReservationModalService);
-  private readonly resSvc = inject(ReservationService);
+  readonly svc = inject(PrivateEventModalService);
+  private readonly eventSvc = inject(PrivateEventService);
   private readonly fb = inject(FormBuilder);
 
   readonly status = signal<FormStatus>('idle');
 
+  readonly eventTypes = ['wedding', 'birthday', 'corporate', 'other'] as const;
+
   readonly form = this.fb.group({
-    name:    ['', [Validators.required, Validators.minLength(2)]],
-    email:   ['', [Validators.required, Validators.email]],
-    phone:   ['', [Validators.required, phoneValidator()]],
-    date:    ['', [Validators.required, minTodayValidator()]],
-    guests:  [2],
-    comment: ['', Validators.maxLength(300)],
-    _hp:     [''],
+    name:      ['', [Validators.required, Validators.minLength(2)]],
+    company:   [''],
+    eventType: ['', Validators.required],
+    guests:    [null as number | null, [Validators.required, Validators.min(1)]],
+    date:      ['', [Validators.required, minTodayValidator()]],
+    comment:   ['', Validators.maxLength(500)],
+    _hp:       [''],
   });
 
   get todayStr(): string {
@@ -73,17 +65,18 @@ export class ReservationModalComponent {
   close(): void {
     this.svc.close();
     this.status.set('idle');
-    this.form.reset({ guests: 2 });
+    this.form.reset();
   }
 
   submit(): void {
+    this.form.markAllAsTouched();
     if (this.form.invalid || this.form.value._hp) return;
     this.status.set('loading');
-    const { _hp, ...payload } = this.form.value;
-    this.resSvc.submit(payload as ReservationPayload).subscribe({
+    const { _hp, ...raw } = this.form.value;
+    this.eventSvc.submit(raw as PrivateEventPayload).subscribe({
       next: () => {
         this.status.set('success');
-        this.form.reset({ guests: 2 });
+        this.form.reset();
       },
       error: () => this.status.set('error'),
     });

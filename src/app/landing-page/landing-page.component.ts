@@ -8,6 +8,7 @@ import { AtmosphereComponent } from '../sections/atmosphere/atmosphere.component
 import { EventsComponent } from '../sections/events/events.component';
 import { ContactsComponent } from '../sections/contacts/contacts.component';
 import { ReservationModalComponent } from '../shared/reservation-modal/reservation-modal.component';
+import { PrivateEventModalComponent } from '../shared/private-event-modal/private-event-modal.component';
 import { LanguageService } from '../core/language.service';
 
 @Component({
@@ -23,6 +24,7 @@ import { LanguageService } from '../core/language.service';
     EventsComponent,
     ContactsComponent,
     ReservationModalComponent,
+    PrivateEventModalComponent,
   ],
   templateUrl: './landing-page.component.html',
 })

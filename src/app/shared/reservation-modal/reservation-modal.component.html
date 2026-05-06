@@ -69,6 +69,8 @@
                        placeholder="+374 XX XX XX XX">
                 @if (fieldError('phone', 'required')) {
                   <span class="rm-error">{{ 'reservation.validation.phone_required' | translate }}</span>
+                } @else if (fieldError('phone', 'phoneFormat')) {
+                  <span class="rm-error">{{ 'reservation.validation.phone_format' | translate }}</span>
                 }
               </div>
             </div>

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
+import { PrivateEventModalService } from '../../core/private-event-modal.service';
 
 @Component({
   selector: 'app-events',
@@ -11,8 +12,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 })
 export class EventsComponent {
   readonly eventTypes = ['corporate', 'wedding', 'birthday', 'reception'];
+  private readonly modal = inject(PrivateEventModalService);
 
-  scrollToReservation(): void {
-    document.getElementById('reservation')?.scrollIntoView({ behavior: 'smooth' });
-  }
+  openModal(): void { this.modal.open(); }
 }

@@ -7,13 +7,13 @@
 
     <form class="login-form" (ngSubmit)="submit()">
       <div class="login-field">
-        <label class="login-label">Пароль</label>
+        <label class="login-label">Password</label>
         <input
           class="login-input"
           type="password"
           [(ngModel)]="password"
           name="password"
-          placeholder="Введите пароль"
+          placeholder="Enter password"
           autocomplete="current-password"
           [disabled]="loading()"
         />
@@ -24,7 +24,7 @@
       }
 
       <button class="login-btn" type="submit" [disabled]="loading()">
-        @if (loading()) { Вход... } @else { Войти }
+        @if (loading()) { Signing in... } @else { Sign In }
       </button>
     </form>
   </div>

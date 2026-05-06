@@ -1,91 +1,130 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 import { AdminApiService, type ImageItem } from '../admin-api.service';
 
-interface FieldDef { key: string; label: string; multiline?: boolean; }
-interface Section  { id: string; label: string; fields: FieldDef[]; }
+interface FieldDef   { key: string; label: string; multiline?: boolean; }
+interface FieldGroup { label?: string; fields: FieldDef[]; cols?: number; dividerAfter?: boolean; imageKey?: string; }
+interface Section    { id: string; label: string; fields?: FieldDef[]; groups?: FieldGroup[]; }
 
 const SECTIONS: Section[] = [
-  { id: 'nav', label: 'Навигация', fields: [
-    { key: 'nav.about',       label: 'О ресторане' },
-    { key: 'nav.cuisine',     label: 'Кухня' },
-    { key: 'nav.atmosphere',  label: 'Атмосфера' },
-    { key: 'nav.events',      label: 'Мероприятия' },
-    { key: 'nav.reservation', label: 'Бронирование' },
-    { key: 'nav.contacts',    label: 'Контакты' },
+  { id: 'nav', label: 'Navigation', fields: [
+    { key: 'nav.about',       label: 'About' },
+    { key: 'nav.cuisine',     label: 'Cuisine' },
+    { key: 'nav.atmosphere',  label: 'Atmosphere' },
+    { key: 'nav.events',      label: 'Events' },
+    { key: 'nav.reservation', label: 'Reservation' },
+    { key: 'nav.contacts',    label: 'Contacts' },
   ]},
-  { id: 'hero', label: 'Герой', fields: [
-    { key: 'hero.tagline', label: 'Подзаголовок' },
-    { key: 'hero.cta',     label: 'Кнопка CTA' },
+  { id: 'hero', label: 'Hero', groups: [
+    { imageKey: 'hero-bg.jpg', fields: [
+      { key: 'hero.est',     label: 'Est. badge' },
+      { key: 'hero.tagline', label: 'Tagline' },
+      { key: 'hero.cta',     label: 'CTA button' },
+    ]},
   ]},
-  { id: 'about', label: 'О ресторане', fields: [
-    { key: 'about.overline',    label: 'Надпись сверху' },
-    { key: 'about.title',       label: 'Заголовок' },
-    { key: 'about.p1',          label: 'Параграф 1', multiline: true },
-    { key: 'about.p2',          label: 'Параграф 2', multiline: true },
-    { key: 'about.stat1_num',   label: 'Цифра 1' },
-    { key: 'about.stat1_label', label: 'Подпись 1' },
-    { key: 'about.stat2_num',   label: 'Цифра 2' },
-    { key: 'about.stat2_label', label: 'Подпись 2' },
-    { key: 'about.stat3_num',   label: 'Цифра 3' },
-    { key: 'about.stat3_label', label: 'Подпись 3' },
+  { id: 'about', label: 'About', fields: [
+    { key: 'about.overline',    label: 'Overline' },
+    { key: 'about.title',       label: 'Title' },
+    { key: 'about.p1',          label: 'Paragraph 1', multiline: true },
+    { key: 'about.p2',          label: 'Paragraph 2', multiline: true },
+    { key: 'about.stat1_num',   label: 'Stat 1: number' },
+    { key: 'about.stat1_label', label: 'Stat 1: label' },
+    { key: 'about.stat2_num',   label: 'Stat 2: number' },
+    { key: 'about.stat2_label', label: 'Stat 2: label' },
+    { key: 'about.stat3_num',   label: 'Stat 3: number' },
+    { key: 'about.stat3_label', label: 'Stat 3: label' },
   ]},
-  { id: 'cuisine', label: 'Кухня', fields: [
-    { key: 'cuisine.overline',               label: 'Надпись сверху' },
-    { key: 'cuisine.title',                  label: 'Заголовок' },
-    { key: 'cuisine.subtitle',               label: 'Подзаголовок', multiline: true },
-    { key: 'cuisine.dishes.carpaccio_name',  label: 'Блюдо 1: название' },
-    { key: 'cuisine.dishes.carpaccio_desc',  label: 'Блюдо 1: описание' },
-    { key: 'cuisine.dishes.lamb_name',       label: 'Блюдо 2: название' },
-    { key: 'cuisine.dishes.lamb_desc',       label: 'Блюдо 2: описание' },
-    { key: 'cuisine.dishes.chicken_name',    label: 'Блюдо 3: название' },
-    { key: 'cuisine.dishes.chicken_desc',    label: 'Блюдо 3: описание' },
-    { key: 'cuisine.dishes.trout_name',      label: 'Блюдо 4: название' },
-    { key: 'cuisine.dishes.trout_desc',      label: 'Блюдо 4: описание' },
-    { key: 'cuisine.dishes.octopus_name',    label: 'Блюдо 5: название' },
-    { key: 'cuisine.dishes.octopus_desc',    label: 'Блюдо 5: описание' },
-    { key: 'cuisine.dishes.turkey_name',     label: 'Блюдо 6: название' },
-    { key: 'cuisine.dishes.turkey_desc',     label: 'Блюдо 6: описание' },
+  { id: 'cuisine', label: 'Cuisine', groups: [
+    { fields: [
+      { key: 'cuisine.overline',  label: 'Overline' },
+      { key: 'cuisine.title',     label: 'Title' },
+      { key: 'cuisine.subtitle',  label: 'Subtitle', multiline: true },
+    ]},
+    { label: 'Dish 1', dividerAfter: true, imageKey: 'dish-carpaccio.jpg', fields: [
+      { key: 'cuisine.dishes.carpaccio_name', label: 'Name' },
+      { key: 'cuisine.dishes.carpaccio_desc', label: 'Description' },
+    ]},
+    { label: 'Dish 2', dividerAfter: true, imageKey: 'dish-lamb.jpg', fields: [
+      { key: 'cuisine.dishes.lamb_name', label: 'Name' },
+      { key: 'cuisine.dishes.lamb_desc', label: 'Description' },
+    ]},
+    { label: 'Dish 3', dividerAfter: true, imageKey: 'dish-chicken.jpg', fields: [
+      { key: 'cuisine.dishes.chicken_name', label: 'Name' },
+      { key: 'cuisine.dishes.chicken_desc', label: 'Description' },
+    ]},
+    { label: 'Dish 4', dividerAfter: true, imageKey: 'dish-trout.jpg', fields: [
+      { key: 'cuisine.dishes.trout_name', label: 'Name' },
+      { key: 'cuisine.dishes.trout_desc', label: 'Description' },
+    ]},
+    { label: 'Dish 5', dividerAfter: true, imageKey: 'dish-octopus.jpg', fields: [
+      { key: 'cuisine.dishes.octopus_name', label: 'Name' },
+      { key: 'cuisine.dishes.octopus_desc', label: 'Description' },
+    ]},
+    { label: 'Dish 6', imageKey: 'dish-turkey.jpg', fields: [
+      { key: 'cuisine.dishes.turkey_name', label: 'Name' },
+      { key: 'cuisine.dishes.turkey_desc', label: 'Description' },
+    ]},
   ]},
-  { id: 'atmosphere', label: 'Атмосфера', fields: [
-    { key: 'atmosphere.overline',  label: 'Надпись сверху' },
-    { key: 'atmosphere.title',     label: 'Заголовок' },
-    { key: 'atmosphere.subtitle',  label: 'Подзаголовок', multiline: true },
-    { key: 'atmosphere.jazz_title', label: 'Джаз: заголовок' },
-    { key: 'atmosphere.jazz_desc',  label: 'Джаз: описание' },
-    { key: 'atmosphere.jazz_time',  label: 'Джаз: время' },
-    { key: 'atmosphere.dj_title',   label: 'DJ: заголовок' },
-    { key: 'atmosphere.dj_desc',    label: 'DJ: описание' },
-    { key: 'atmosphere.dj_time',    label: 'DJ: время' },
+  { id: 'atmosphere', label: 'Upcoming Events', groups: [
+    { fields: [
+      { key: 'atmosphere.overline',  label: 'Overline' },
+      { key: 'atmosphere.title',     label: 'Title' },
+      { key: 'atmosphere.subtitle',  label: 'Subtitle', multiline: true },
+    ]},
+    { label: 'Programme 1', cols: 3, dividerAfter: true, fields: [
+      { key: 'atmosphere.jazz_time',  label: 'Time' },
+      { key: 'atmosphere.jazz_title', label: 'Title' },
+      { key: 'atmosphere.jazz_desc',  label: 'Subtitle' },
+    ]},
+    { label: 'Programme 2', cols: 3, dividerAfter: true, fields: [
+      { key: 'atmosphere.dj_time',  label: 'Time' },
+      { key: 'atmosphere.dj_title', label: 'Title' },
+      { key: 'atmosphere.dj_desc',  label: 'Subtitle' },
+    ]},
+    { label: 'Programme 3', cols: 3, dividerAfter: true, fields: [
+      { key: 'atmosphere.prog3_time',  label: 'Time' },
+      { key: 'atmosphere.prog3_title', label: 'Title' },
+      { key: 'atmosphere.prog3_desc',  label: 'Subtitle' },
+    ]},
+    { label: 'Programme 4', cols: 3, dividerAfter: true, fields: [
+      { key: 'atmosphere.prog4_time',  label: 'Time' },
+      { key: 'atmosphere.prog4_title', label: 'Title' },
+      { key: 'atmosphere.prog4_desc',  label: 'Subtitle' },
+    ]},
+    { label: 'Programme 5', cols: 3, fields: [
+      { key: 'atmosphere.prog5_time',  label: 'Time' },
+      { key: 'atmosphere.prog5_title', label: 'Title' },
+      { key: 'atmosphere.prog5_desc',  label: 'Subtitle' },
+    ]},
   ]},
-  { id: 'events', label: 'Мероприятия', fields: [
-    { key: 'events.overline',             label: 'Надпись сверху' },
-    { key: 'events.title',                label: 'Заголовок' },
-    { key: 'events.subtitle',             label: 'Подзаголовок', multiline: true },
-    { key: 'events.capacity_label',       label: 'Вместимость: ед. изм.' },
-    { key: 'events.capacity_sub',         label: 'Вместимость: подпись' },
-    { key: 'events.types.corporate',      label: 'Тип: корпоративный' },
-    { key: 'events.types.wedding',        label: 'Тип: свадьба' },
-    { key: 'events.types.birthday',       label: 'Тип: день рождения' },
-    { key: 'events.types.reception',      label: 'Тип: приём' },
-    { key: 'events.cta',                  label: 'Кнопка' },
+  { id: 'events', label: 'Private Events', fields: [
+    { key: 'events.overline',             label: 'Overline' },
+    { key: 'events.title',                label: 'Title' },
+    { key: 'events.subtitle',             label: 'Subtitle', multiline: true },
+    { key: 'events.capacity_label',       label: 'Capacity: unit' },
+    { key: 'events.capacity_sub',         label: 'Capacity: caption' },
+    { key: 'events.types.corporate',      label: 'Type: corporate' },
+    { key: 'events.types.wedding',        label: 'Type: wedding' },
+    { key: 'events.types.birthday',       label: 'Type: birthday' },
+    { key: 'events.types.reception',      label: 'Type: reception' },
+    { key: 'events.cta',                  label: 'Button' },
   ]},
-  { id: 'contacts', label: 'Контакты', fields: [
-    { key: 'contacts.overline',      label: 'Надпись сверху' },
-    { key: 'contacts.title',         label: 'Заголовок' },
-    { key: 'contacts.address_label', label: 'Адрес: заголовок' },
-    { key: 'contacts.address',       label: 'Адрес', multiline: true },
-    { key: 'contacts.phone_label',   label: 'Телефон: заголовок' },
-    { key: 'contacts.hours_label',   label: 'Часы: заголовок' },
-    { key: 'contacts.hours',         label: 'Часы работы' },
-    { key: 'contacts.dress_label',   label: 'Дресс-код: заголовок' },
-    { key: 'contacts.dress',         label: 'Дресс-код' },
+  { id: 'contacts', label: 'Contacts', fields: [
+    { key: 'contacts.overline',      label: 'Overline' },
+    { key: 'contacts.title',         label: 'Title' },
+    { key: 'contacts.address_label', label: 'Address: heading' },
+    { key: 'contacts.address',       label: 'Address', multiline: true },
+    { key: 'contacts.phone_label',   label: 'Phone: heading' },
+    { key: 'contacts.hours_label',   label: 'Hours: heading' },
+    { key: 'contacts.hours',         label: 'Opening hours' },
+    { key: 'contacts.dress_label',   label: 'Dress code: heading' },
+    { key: 'contacts.dress',         label: 'Dress code' },
   ]},
-  { id: 'footer', label: 'Подвал', fields: [
-    { key: 'footer.tagline',   label: 'Слоган' },
-    { key: 'footer.copyright', label: 'Копирайт' },
+  { id: 'footer', label: 'Footer', fields: [
+    { key: 'footer.tagline',   label: 'Tagline' },
+    { key: 'footer.copyright', label: 'Copyright' },
   ]},
 ];
 
@@ -106,6 +145,14 @@ export class AdminDashboardComponent implements OnInit {
   activeTab = signal<'texts' | 'images'>('texts');
   activeLang = signal<'ru' | 'en' | 'hy'>('ru');
   activeSectionId = signal(SECTIONS[0].id);
+
+  constructor() {
+    const saved = sessionStorage.getItem('admin_section');
+    if (saved && SECTIONS.some(s => s.id === saved)) {
+      this.activeSectionId.set(saved);
+    }
+    effect(() => sessionStorage.setItem('admin_section', this.activeSectionId()));
+  }
 
   // Data
   translations = signal<Record<string, Record<string, unknown>>>({});
@@ -209,6 +256,17 @@ export class AdminDashboardComponent implements OnInit {
   imageUrl(img: ImageItem): string {
     const ts = this.imageTimestamps()[img.name];
     return ts ? `${img.url}?t=${ts}` : img.url;
+  }
+
+  dishImageUrl(name: string): string {
+    const ts = this.imageTimestamps()[name];
+    const base = `/assets/images/${name}`;
+    return ts ? `${base}?t=${ts}` : base;
+  }
+
+  triggerDishUpload(imageName: string): void {
+    const input = document.getElementById(`dish-upload-${imageName}`) as HTMLInputElement;
+    input?.click();
   }
 
   logout(): void {

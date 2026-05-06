@@ -6,7 +6,7 @@ import {
 } from '@angular/ssr/node';
 import express, { type Request, type Response, type NextFunction } from 'express';
 import { join } from 'node:path';
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, copyFileSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
 import multer from 'multer';
 import cookieParser from 'cookie-parser';
@@ -19,6 +19,18 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const assetsBase = existsSync(browserDistFolder)
   ? browserDistFolder
   : join(process.cwd(), 'public');
+
+// ── Translation data store ─────────────────────────────────────────────────────
+// Kept outside public/ so ng-serve hot-reload never triggers on admin saves.
+const sourceI18nDir = join(existsSync(browserDistFolder) ? browserDistFolder : join(process.cwd(), 'public'), 'i18n');
+const dataDir = join(process.cwd(), 'data', 'i18n');
+
+if (!existsSync(dataDir)) mkdirSync(dataDir, { recursive: true });
+for (const lang of ['ru', 'en', 'hy']) {
+  const dst = join(dataDir, `${lang}.json`);
+  const src = join(sourceI18nDir, `${lang}.json`);
+  if (!existsSync(dst) && existsSync(src)) copyFileSync(src, dst);
+}
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
@@ -60,7 +72,7 @@ function requireAdmin(req: Request, res: Response, next: NextFunction): void {
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
-  message: { error: 'Слишком много попыток. Попробуйте через 15 минут.' },
+  message: { error: 'Too many attempts. Please try again in 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -69,7 +81,7 @@ const loginLimiter = rateLimit({
 app.post('/admin/api/login', loginLimiter, express.json(), async (req: Request, res: Response): Promise<void> => {
   const { password } = req.body as { password: string };
   const valid = await bcrypt.compare(password ?? '', ADMIN_HASH);
-  if (!valid) { res.status(401).json({ error: 'Неверный пароль' }); return; }
+  if (!valid) { res.status(401).json({ error: 'Invalid password' }); return; }
 
   pruneExpired();
   const token = randomBytes(32).toString('hex');
@@ -93,23 +105,39 @@ app.post('/admin/api/logout', (req: Request, res: Response): void => {
   res.json({ ok: true });
 });
 
+// ── Serve live translations (data/ overrides static public/i18n) ──────────────
+app.get('/i18n/:lang.json', (req: Request, res: Response): void => {
+  const lang = req.params['lang'] as string;
+  if (!['ru', 'en', 'hy'].includes(lang)) { res.status(404).end(); return; }
+  const live = join(dataDir, `${lang}.json`);
+  res.sendFile(existsSync(live) ? live : join(sourceI18nDir, `${lang}.json`));
+});
+
 // ── Translations ──────────────────────────────────────────────────────────────
 app.get('/admin/api/translations', requireAdmin, (_req: Request, res: Response): void => {
-  const result: Record<string, unknown> = {};
-  for (const lang of ['ru', 'en', 'hy']) {
-    result[lang] = JSON.parse(readFileSync(join(assetsBase, `i18n/${lang}.json`), 'utf-8'));
+  try {
+    const result: Record<string, unknown> = {};
+    for (const lang of ['ru', 'en', 'hy']) {
+      result[lang] = JSON.parse(readFileSync(join(dataDir, `${lang}.json`), 'utf-8'));
+    }
+    res.json(result);
+  } catch {
+    res.status(500).json({ error: 'Failed to read translations' });
   }
-  res.json(result);
 });
 
 app.put('/admin/api/translations', requireAdmin, express.json({ limit: '2mb' }), (req: Request, res: Response): void => {
-  const body = req.body as Record<string, unknown>;
-  for (const lang of ['ru', 'en', 'hy']) {
-    if (body[lang]) {
-      writeFileSync(join(assetsBase, `i18n/${lang}.json`), JSON.stringify(body[lang], null, 2));
+  try {
+    const body = req.body as Record<string, unknown>;
+    for (const lang of ['ru', 'en', 'hy']) {
+      if (body[lang]) {
+        writeFileSync(join(dataDir, `${lang}.json`), JSON.stringify(body[lang], null, 2));
+      }
     }
+    res.json({ ok: true });
+  } catch {
+    res.status(500).json({ error: 'Failed to save translations' });
   }
-  res.json({ ok: true });
 });
 
 // ── Images ────────────────────────────────────────────────────────────────────

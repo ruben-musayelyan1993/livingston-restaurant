@@ -16,23 +16,19 @@
         <p class="atmosphere__program-label overline">{{ 'atmosphere.program_label' | translate }}</p>
 
         <div class="atmosphere__blocks">
-          <div class="atmosphere__block">
-            <span class="atmosphere__block-time">{{ 'atmosphere.jazz_time' | translate }}</span>
-            <div class="atmosphere__block-border"></div>
-            <div class="atmosphere__block-body">
-              <h3 class="atmosphere__block-title">{{ 'atmosphere.jazz_title' | translate }}</h3>
-              <p class="atmosphere__block-desc">{{ 'atmosphere.jazz_desc' | translate }}</p>
+          @for (prog of programmes; track prog.title) {
+            <div class="atmosphere__block">
+              <span class="atmosphere__block-time">{{ prog.time | translate }}</span>
+              <div class="atmosphere__block-border"></div>
+              <div class="atmosphere__block-body">
+                <h3 class="atmosphere__block-title">{{ prog.title | translate }}</h3>
+                <p class="atmosphere__block-desc">{{ prog.desc | translate }}</p>
+              </div>
+              <button class="btn-ghost atmosphere__block-reserve" (click)="openReservation()">
+                {{ 'hero.cta' | translate }}
+              </button>
             </div>
-          </div>
-
-          <div class="atmosphere__block">
-            <span class="atmosphere__block-time">{{ 'atmosphere.dj_time' | translate }}</span>
-            <div class="atmosphere__block-border"></div>
-            <div class="atmosphere__block-body">
-              <h3 class="atmosphere__block-title">{{ 'atmosphere.dj_title' | translate }}</h3>
-              <p class="atmosphere__block-desc">{{ 'atmosphere.dj_desc' | translate }}</p>
-            </div>
-          </div>
+          }
         </div>
       </div>
 

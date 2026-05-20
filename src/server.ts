@@ -35,6 +35,10 @@ for (const lang of ['ru', 'en', 'hy']) {
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+// ── Telegram config ───────────────────────────────────────────────────────────
+const TG_TOKEN = process.env['TELEGRAM_BOT_TOKEN'];
+const TG_CHAT  = process.env['TELEGRAM_CHAT_ID'];
+
 app.use(cookieParser());
 
 // ── Admin auth ────────────────────────────────────────────────────────────────
@@ -103,6 +107,75 @@ app.post('/admin/api/logout', (req: Request, res: Response): void => {
   if (token) sessions.delete(token);
   res.clearCookie('admin_session', { path: '/' });
   res.json({ ok: true });
+});
+
+// ── Telegram proxy ────────────────────────────────────────────────────────────
+const contactLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  message: { error: 'Too many requests. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+async function sendTelegram(text: string): Promise<void> {
+  if (!TG_TOKEN || !TG_CHAT) throw new Error('Telegram not configured');
+  const r = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: TG_CHAT, text, parse_mode: 'HTML' }),
+  });
+  if (!r.ok) throw new Error(`Telegram responded with ${r.status}`);
+}
+
+app.post('/api/reservation', contactLimiter, express.json(), async (req: Request, res: Response): Promise<void> => {
+  const { name, email, phone, date, guests, comment } = req.body as Record<string, string>;
+  try {
+    const formatted = new Date(date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    const text = [
+      '🍽 <b>Новая заявка на бронирование</b>',
+      '',
+      `👤 <b>Имя:</b> ${name}`,
+      `📧 <b>Email:</b> ${email}`,
+      `📞 <b>Телефон:</b> ${phone}`,
+      `📅 <b>Дата:</b> ${formatted}`,
+      `👥 <b>Гостей:</b> ${guests}`,
+      comment?.trim() ? `💬 <b>Комментарий:</b> ${comment}` : '',
+    ].filter(Boolean).join('\n');
+    await sendTelegram(text);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Reservation Telegram error:', err);
+    res.status(502).json({ error: 'Failed to send notification' });
+  }
+});
+
+const eventTypeLabels: Record<string, string> = {
+  wedding: 'Свадьба', birthday: 'День рождения', corporate: 'Корпоратив', other: 'Другое',
+};
+
+app.post('/api/private-event', contactLimiter, express.json(), async (req: Request, res: Response): Promise<void> => {
+  const { name, company, eventType, guests, date, comment } = req.body as Record<string, string>;
+  try {
+    const formatted = new Date(date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    const lines = [
+      '🎉 <b>Новая заявка на частное мероприятие</b>',
+      '',
+      `👤 <b>Имя:</b> ${name}`,
+    ];
+    if (company?.trim()) lines.push(`🏢 <b>Компания:</b> ${company}`);
+    lines.push(
+      `🎭 <b>Тип мероприятия:</b> ${eventTypeLabels[eventType] ?? eventType}`,
+      `👥 <b>Гостей:</b> ${guests}`,
+      `📅 <b>Дата:</b> ${formatted}`,
+    );
+    if (comment?.trim()) lines.push(`💬 <b>Комментарий:</b> ${comment}`);
+    await sendTelegram(lines.join('\n'));
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('PrivateEvent Telegram error:', err);
+    res.status(502).json({ error: 'Failed to send notification' });
+  }
 });
 
 // ── Serve live translations (data/ overrides static public/i18n) ──────────────
